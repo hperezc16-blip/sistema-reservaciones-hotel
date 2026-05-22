@@ -89,7 +89,8 @@ router.post("/reservations", requireAuth, async (req: AuthRequest, res) => {
 });
 
 router.get("/reservations/:id", requireAuth, async (req: AuthRequest, res) => {
-  const [reservation] = await db.select().from(reservationsTable).where(eq(reservationsTable.id, req.params.id)).limit(1);
+  const id = req.params.id as string;
+  const [reservation] = await db.select().from(reservationsTable).where(eq(reservationsTable.id, id)).limit(1);
   if (!reservation) {
     res.status(404).json({ error: "Not Found", message: "Reserva no encontrada" });
     return;
@@ -103,7 +104,8 @@ router.get("/reservations/:id", requireAuth, async (req: AuthRequest, res) => {
 });
 
 router.patch("/reservations/:id", requireAuth, async (req: AuthRequest, res) => {
-  const [reservation] = await db.select().from(reservationsTable).where(eq(reservationsTable.id, req.params.id)).limit(1);
+  const id = req.params.id as string;
+  const [reservation] = await db.select().from(reservationsTable).where(eq(reservationsTable.id, id)).limit(1);
   if (!reservation) {
     res.status(404).json({ error: "Not Found", message: "Reserva no encontrada" });
     return;
@@ -139,7 +141,7 @@ router.patch("/reservations/:id", requireAuth, async (req: AuthRequest, res) => 
 
     const [updated] = await db.update(reservationsTable)
       .set(updateFields as any)
-      .where(eq(reservationsTable.id, req.params.id))
+      .where(eq(reservationsTable.id, id))
       .returning();
 
     const enriched = await enrichReservation(updated);
@@ -151,7 +153,7 @@ router.patch("/reservations/:id", requireAuth, async (req: AuthRequest, res) => 
     }
     const [updated] = await db.update(reservationsTable)
       .set({ estado: "cancelada" })
-      .where(eq(reservationsTable.id, req.params.id))
+      .where(eq(reservationsTable.id, id))
       .returning();
 
     const enriched = await enrichReservation(updated);
