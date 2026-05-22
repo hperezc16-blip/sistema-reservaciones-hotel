@@ -8,7 +8,7 @@ import {
   type Room,
   type RoomInputTipo
 } from "@workspace/api-client-react";
-import { axiosInstance } from "../../lib/axios-client";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -36,16 +36,15 @@ export default function Rooms() {
   const queryClient = useQueryClient();
 
   const { data: rooms, isLoading } = useListRooms(
-    {}, 
-    { query: { queryKey: getListRoomsQueryKey({}) } }, 
-    axiosInstance
+    {},
+    { query: { queryKey: getListRoomsQueryKey({}) } }
   );
 
   const invalidateRooms = () => {
     queryClient.invalidateQueries({ queryKey: getListRoomsQueryKey({}) });
     setIsDialogOpen(false);
     setEditingRoom(null);
-    form.reset();
+    reset();
   };
 
   const createMutation = useCreateRoom({
@@ -56,7 +55,7 @@ export default function Rooms() {
       },
       onError: (err: any) => toast({ variant: "destructive", title: "Error", description: err.message })
     }
-  }, axiosInstance);
+  });
 
   const updateMutation = useUpdateRoom({
     mutation: {
@@ -66,7 +65,7 @@ export default function Rooms() {
       },
       onError: (err: any) => toast({ variant: "destructive", title: "Error", description: err.message })
     }
-  }, axiosInstance);
+  });
 
   const deleteMutation = useDeleteRoom({
     mutation: {
@@ -76,7 +75,7 @@ export default function Rooms() {
       },
       onError: (err: any) => toast({ variant: "destructive", title: "Error", description: err.message })
     }
-  }, axiosInstance);
+  });
 
   const { register, handleSubmit, control, reset, formState: { errors }, setValue } = useForm({
     defaultValues: {

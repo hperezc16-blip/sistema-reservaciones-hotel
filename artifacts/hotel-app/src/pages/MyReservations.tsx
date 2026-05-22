@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useListReservations, useCancelReservation, getListReservationsQueryKey } from "@workspace/api-client-react";
-import { axiosInstance } from "@/lib/axios-client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -72,8 +71,7 @@ export default function MyReservations() {
 
   const { data: reservations, isLoading } = useListReservations(
     {},
-    { query: { enabled: !!user, queryKey: getListReservationsQueryKey({}) } },
-    axiosInstance
+    { query: { enabled: !!user, queryKey: getListReservationsQueryKey({}) } }
   );
 
   const cancelMutation = useCancelReservation({
@@ -86,7 +84,7 @@ export default function MyReservations() {
         toast({ variant: "destructive", title: "Error", description: "No se pudo cancelar. Intente nuevamente." });
       }
     }
-  }, axiosInstance);
+  });
 
   if (authLoading) {
     return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>;

@@ -1,13 +1,11 @@
 import { useGetAdminStats, getGetAdminStatsQueryKey } from "@workspace/api-client-react";
-import { axiosInstance } from "../../lib/axios-client";
 import { Users, Bed, CalendarDays, DollarSign, TrendingUp } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 
 export default function Dashboard() {
   const { data: stats, isLoading } = useGetAdminStats(
-    { query: { queryKey: getGetAdminStatsQueryKey() } },
-    axiosInstance
+    { query: { queryKey: getGetAdminStatsQueryKey() } }
   );
 
   if (isLoading || !stats) {

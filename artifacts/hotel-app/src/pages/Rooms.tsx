@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useSearch } from "wouter";
 import { useListRooms } from "@workspace/api-client-react";
-import { axiosInstance } from "@/lib/axios-client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -30,7 +29,7 @@ export default function Rooms() {
 
   const { data: rooms, isLoading } = useListRooms(queryParams, {
     query: { queryKey: ["rooms", JSON.stringify(queryParams)] }
-  }, axiosInstance);
+  });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
