@@ -4,7 +4,7 @@ import { roomsTable, reservationsTable } from "@workspace/db";
 import { eq, and, or, lte, gte, ne } from "drizzle-orm";
 import { requireAdmin, requireAuth, type AuthRequest } from "../middlewares/auth.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/rooms", async (req, res) => {
   const { fechaEntrada, fechaSalida, capacidad, tipo } = req.query as Record<string, string>;

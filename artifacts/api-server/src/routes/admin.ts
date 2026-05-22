@@ -4,7 +4,7 @@ import { reservationsTable, roomsTable, usersTable } from "@workspace/db";
 import { eq, count, and, gte, lte, ne, sql, desc } from "drizzle-orm";
 import { requireAdmin, type AuthRequest } from "../middlewares/auth.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/admin/stats", requireAdmin, async (req: AuthRequest, res) => {
   const today = new Date().toISOString().split("T")[0];

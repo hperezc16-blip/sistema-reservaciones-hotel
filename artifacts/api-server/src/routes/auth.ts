@@ -5,7 +5,7 @@ import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { requireAuth, signToken, type AuthRequest } from "../middlewares/auth.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.post("/auth/register", async (req, res) => {
   const { nombre, email, password, telefono } = req.body;

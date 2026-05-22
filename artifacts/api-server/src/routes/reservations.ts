@@ -4,7 +4,7 @@ import { reservationsTable, roomsTable, usersTable } from "@workspace/db";
 import { eq, and, or, lte, gte, ne, desc } from "drizzle-orm";
 import { requireAuth, type AuthRequest } from "../middlewares/auth.js";
 
-const router = Router();
+const router: Router = Router();
 
 async function enrichReservation(r: typeof reservationsTable.$inferSelect) {
   const [room] = await db.select().from(roomsTable).where(eq(roomsTable.id, r.habitacionId)).limit(1);
