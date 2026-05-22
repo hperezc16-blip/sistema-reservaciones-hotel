@@ -34,9 +34,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-        env:
-          PORT: "3000"
-          BASE_PATH: "/"
 
   lint:
     name: Lint
