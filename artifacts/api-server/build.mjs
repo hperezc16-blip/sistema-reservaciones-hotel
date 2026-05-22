@@ -1,5 +1,4 @@
 import { build } from "esbuild";
-import { pino } from "esbuild-plugin-pino";
 
 await build({
   entryPoints: ["src/index.ts"],
@@ -10,5 +9,4 @@ await build({
   outfile: "dist/index.mjs",
   sourcemap: true,
   packages: "external",
-  plugins: [pino({ transports: ["pino-pretty"] })],
 });
