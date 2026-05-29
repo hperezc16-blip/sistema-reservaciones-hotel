@@ -5,6 +5,9 @@ node_modules/
 # Build outputs
 dist/
 build/
+
+# Keep compiled lib packages (needed for Railway deploy)
+!lib/*/dist/
 .next/
 out/
 
