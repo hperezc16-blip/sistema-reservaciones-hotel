@@ -82,3 +82,46 @@ jobs:
         with:
           name: coverage-report
           path: coverage/
+
+  deploy:
+    name: Deploy
+    needs: [build, lint, test]
+    runs-on: ubuntu-latest
+    # Solo despliega en push a main (no en PRs ni en develop)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      # ── Backend: Railway ──────────────────────────────────────────────────
+      - name: Instalar Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy API a Railway
+        run: railway up --detach --service api-server
+        working-directory: ./artifacts/api-server
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      # ── Frontend: Vercel ──────────────────────────────────────────────────
+      - name: Instalar Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy Frontend a Vercel
+        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
+        working-directory: ./artifacts/hotel-app
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

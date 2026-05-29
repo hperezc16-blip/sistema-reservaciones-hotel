@@ -124,11 +124,25 @@ Los reportes de cobertura se generan en `artifacts/api-server/coverage/`.
 
 El pipeline de GitHub Actions se activa en cada `push` o `pull_request` a las ramas `main` y `develop`:
 
-| Job | Descripción |
-|---|---|
-| **Build & Typecheck** | Compila el proyecto y verifica tipos TypeScript |
-| **Lint** | Análisis estático con ESLint |
-| **Tests & Coverage** | Ejecuta Vitest y genera reporte de cobertura |
+| Job | Trigger | Descripción |
+|---|---|---|
+| **Build & Typecheck** | push / PR | Compila el proyecto y verifica tipos TypeScript |
+| **Lint** | push / PR | Análisis estático con ESLint |
+| **Tests & Coverage** | push / PR | Ejecuta Vitest y genera reporte de cobertura |
+| **Deploy** | push a `main` | Despliega API en Railway y frontend en Vercel (requiere secrets configurados) |
+
+### Configuración de Deploy (secrets de GitHub)
+
+Para activar el deploy automático, agregar estos secrets en **Settings → Secrets → Actions**:
+
+| Secret | Plataforma | Cómo obtenerlo |
+|---|---|---|
+| `RAILWAY_TOKEN` | Railway | Dashboard → Account Settings → Tokens |
+| `VERCEL_TOKEN` | Vercel | Account → Settings → Tokens |
+| `VERCEL_ORG_ID` | Vercel | `vercel whoami --token <token>` |
+| `VERCEL_PROJECT_ID` | Vercel | Proyecto → Settings → Project ID |
+
+Ver [DEPLOY_SETUP.md](DEPLOY_SETUP.md) para la guía completa paso a paso.
 
 ## Funcionalidades del Sistema
 
