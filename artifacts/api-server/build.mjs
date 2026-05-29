@@ -1,12 +1,4 @@
 import { build } from "esbuild";
-import { readFileSync } from "fs";
-
-const pkg = JSON.parse(readFileSync("package.json", "utf8"));
-
-// Bundle workspace packages inline; keep npm packages external
-const externalDeps = Object.keys(pkg.dependencies || {}).filter(
-  (dep) => !dep.startsWith("@workspace/")
-);
 
 await build({
   entryPoints: ["src/index.ts"],
@@ -16,5 +8,23 @@ await build({
   format: "esm",
   outfile: "dist/index.mjs",
   sourcemap: true,
-  external: externalDeps,
+  packages: "external",
+  plugins: [
+    {
+      name: "workspace-bundler",
+      setup(builder) {
+        // Inline @workspace/* packages instead of marking them external,
+        // so esbuild transpiles their TypeScript source directly.
+        // All npm packages (pg, drizzle-orm, express, etc.) remain external
+        // thanks to the top-level `packages: "external"` option.
+        builder.onResolve({ filter: /^@workspace\// }, async (args) => {
+          const resolved = await builder.resolve(args.path, {
+            kind: args.kind,
+            resolveDir: args.resolveDir,
+          });
+          return { path: resolved.path, external: false };
+        });
+      },
+    },
+  ],
 });
