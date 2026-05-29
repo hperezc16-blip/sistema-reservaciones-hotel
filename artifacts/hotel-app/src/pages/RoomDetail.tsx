@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { useGetRoom, useCreateReservation, getGetRoomQueryKey } from "@workspace/api-client-react";
-import { axiosInstance } from "@/lib/axios-client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,8 +42,7 @@ export default function RoomDetail() {
 
   const { data: room, isLoading } = useGetRoom(
     id || "",
-    { query: { enabled: !!id, queryKey: getGetRoomQueryKey(id!) } },
-    axiosInstance
+    { query: { enabled: !!id, queryKey: getGetRoomQueryKey(id!) } }
   );
 
   const form = useForm<FormValues>({
@@ -85,7 +83,7 @@ export default function RoomDetail() {
         });
       }
     }
-  }, axiosInstance);
+  });
 
   const handleStepDetails = form.handleSubmit(() => {
     if (!user) {

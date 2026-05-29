@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useLogin } from "@workspace/api-client-react";
-import { axiosInstance } from "../lib/axios-client";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -52,7 +51,6 @@ export default function Login() {
         },
       },
     },
-    axiosInstance
   );
 
   const onSubmit = (data: LoginFormValues) => {

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useListReservations, getListReservationsQueryKey } from "@workspace/api-client-react";
-import { axiosInstance } from "../../lib/axios-client";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { useQueryClient } from "@tanstack/react-query";
@@ -203,8 +202,7 @@ export default function Reservations() {
 
   const { data: reservations, isLoading } = useListReservations(
     {},
-    { query: { queryKey: getListReservationsQueryKey({}) } },
-    axiosInstance
+    { query: { queryKey: getListReservationsQueryKey({}) } }
   ) as { data: ReservationFull[] | undefined; isLoading: boolean };
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: getListReservationsQueryKey({}) });

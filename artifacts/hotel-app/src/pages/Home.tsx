@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useListRooms } from "@workspace/api-client-react";
-import { axiosInstance } from "@/lib/axios-client";
 import { 
   Wifi, Coffee, Car, Utensils, Waves, Dumbbell, Shield, Clock, 
   Phone, Mail, MapPin, ChevronDown, ChevronUp, Star, Check, Trees, Mountain
@@ -85,7 +84,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 export default function Home() {
   const [, setLocation] = useLocation();
   const [search, setSearch] = useState({ fechaEntrada: "", fechaSalida: "", capacidad: "" });
-  const { data: rooms, isLoading } = useListRooms({}, { query: { queryKey: ['rooms', 'featured'] } }, axiosInstance);
+  const { data: rooms, isLoading } = useListRooms({}, { query: { queryKey: ['rooms', 'featured'] } });
   const featured = rooms?.filter(r => r.activo).slice(0, 3) || [];
 
   const handleSearch = (e: React.FormEvent) => {

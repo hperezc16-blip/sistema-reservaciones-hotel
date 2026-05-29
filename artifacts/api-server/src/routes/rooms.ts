@@ -4,7 +4,7 @@ import { roomsTable, reservationsTable } from "@workspace/db";
 import { eq, and, or, lte, gte, ne } from "drizzle-orm";
 import { requireAdmin, requireAuth, type AuthRequest } from "../middlewares/auth.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/rooms", async (req, res) => {
   const { fechaEntrada, fechaSalida, capacidad, tipo } = req.query as Record<string, string>;
@@ -63,6 +63,7 @@ router.get("/rooms/:id", async (req, res) => {
 });
 
 router.put("/rooms/:id", requireAdmin, async (req: AuthRequest, res) => {
+  const id = req.params.id as string;
   const { nombre, descripcion, tipo, precioNoche, capacidad, imageUrl, amenidades, activo } = req.body;
   const [room] = await db.update(roomsTable)
     .set({
@@ -75,7 +76,7 @@ router.put("/rooms/:id", requireAdmin, async (req: AuthRequest, res) => {
       amenidades: amenidades ?? null,
       activo: activo !== undefined ? Boolean(activo) : undefined,
     })
-    .where(eq(roomsTable.id, req.params.id))
+    .where(eq(roomsTable.id, id))
     .returning();
   if (!room) {
     res.status(404).json({ error: "Not Found", message: "Habitación no encontrada" });
@@ -85,7 +86,8 @@ router.put("/rooms/:id", requireAdmin, async (req: AuthRequest, res) => {
 });
 
 router.delete("/rooms/:id", requireAdmin, async (req: AuthRequest, res) => {
-  await db.update(roomsTable).set({ activo: false }).where(eq(roomsTable.id, req.params.id));
+  const id = req.params.id as string;
+  await db.update(roomsTable).set({ activo: false }).where(eq(roomsTable.id, id));
   res.json({ success: true, message: "Habitación desactivada" });
 });
 
