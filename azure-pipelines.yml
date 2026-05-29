@@ -1,0 +1,99 @@
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10'
+
+stages:
+  - stage: CI
+    displayName: 'Build, Lint y Pruebas'
+    jobs:
+      - job: Build
+        displayName: 'Build y Typecheck'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+            displayName: 'Instalar Node.js $(NODE_VERSION)'
+
+          - script: npm install -g pnpm@$(PNPM_VERSION)
+            displayName: 'Instalar pnpm'
+
+          - script: pnpm install --frozen-lockfile
+            displayName: 'Instalar dependencias'
+
+          - script: pnpm typecheck
+            displayName: 'Verificacion de tipos TypeScript'
+
+          - script: pnpm build
+            displayName: 'Compilar proyecto'
+
+      - job: Lint
+        displayName: 'Analisis de codigo ESLint'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+            displayName: 'Instalar Node.js'
+
+          - script: npm install -g pnpm@$(PNPM_VERSION)
+            displayName: 'Instalar pnpm'
+
+          - script: pnpm install --frozen-lockfile
+            displayName: 'Instalar dependencias'
+
+          - script: pnpm lint
+            displayName: 'Ejecutar ESLint'
+
+      - job: Tests
+        displayName: 'Pruebas unitarias e integracion'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+            displayName: 'Instalar Node.js'
+
+          - script: npm install -g pnpm@$(PNPM_VERSION)
+            displayName: 'Instalar pnpm'
+
+          - script: pnpm install --frozen-lockfile
+            displayName: 'Instalar dependencias'
+
+          - script: pnpm test:coverage
+            displayName: 'Ejecutar pruebas con cobertura'
+
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/test-results.xml'
+              mergeTestResults: true
+              testRunTitle: 'Pruebas Hotel Los Volcanes'
+
+  - stage: Deploy
+    displayName: 'Confirmacion de despliegue'
+    dependsOn: CI
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - job: ConfirmarDespliegue
+        displayName: 'Verificar despliegue automatico'
+        steps:
+          - script: |
+              echo "Rama: $(Build.SourceBranch)"
+              echo "Commit: $(Build.SourceVersion)"
+              echo "Backend: Railway - despliegue automatico via webhook"
+              echo "Frontend: Vercel - despliegue automatico via webhook"
+            displayName: 'Confirmar despliegue en produccion'
