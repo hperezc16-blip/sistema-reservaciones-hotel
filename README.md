@@ -184,3 +184,6 @@ Ver [DEPLOY_SETUP.md](DEPLOY_SETUP.md) para la guía completa paso a paso.
 
 - **Hazel Ruvi Pérez Cárcamo** — hperezc16@miumg.edu.gt
 - Universidad Mariano Gálvez de Guatemala — Ingeniería de Software
+##Contribuciones
+.Hazel Ruvi Pérez Cárcamo -- Desarrollo principal
+. Luis Reyes -- Módulo de calificaciones y reseñas
